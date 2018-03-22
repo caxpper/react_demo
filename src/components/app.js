@@ -1,23 +1,67 @@
-import React from 'react';
-import '../assets/css/app.css';
-import logo from '../assets/images/logo.svg';
-import shamrockL from '../assets/images/shamrock-l.png';
-import shamrockR from '../assets/images/shamrock-r.png';
-import gold from '../assets/images/pot-o-gold.png';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import React,{Component} from 'react';
+import {getRandomPosition, getRandomColor} from '../helpers';
+import BoxContainer from './box_container';
 
-const App = () => (
-    <div>
-        <div className="app">
-            <img src={gold} className="gold left" />
-            <img src={logo} className="logo rotate"/>
-            <div className="title-container">
-                <img src={shamrockL} className="clover left rotate3d-right" />
-                <h1>Welcome to React</h1>
-                <img src={shamrockR} className="clover right rotate3d-left" />
-            </div>
-            <img src={gold} className="gold right"/>
-        </div>
-    </div>
-);
+
+
+class App extends Component{
+    
+    constructor(props){
+        super(props);
+
+        this.state = {
+            boxes: [
+                {
+                    color:'blue',
+                    pos:getRandomPosition()
+                },
+                {
+                    color:'pink',
+                    pos:getRandomPosition()
+                },
+                {
+                    color:'green',
+                    pos:getRandomPosition()
+                },
+                {
+                    color:'orange',
+                    pos:getRandomPosition()
+                },
+                {
+                    color:'red',
+                    pos:getRandomPosition()
+                },
+            ]
+        };
+
+        this.changeColor = this.changeColor.bind(this);
+    }
+
+    changeColor(index){
+        const newBoxes = this.state.boxes.slice();
+
+        newBoxes[index].color = getRandomColor();
+        newBoxes[index].pos = getRandomPosition();
+
+        this.setState({
+            boxes: newBoxes
+        });
+    }
+
+    render(){
+
+        const boxElements = this.state.boxes.map((item, index)=>{
+            return (
+                <BoxContainer pos={item.pos} newColor={()=> this.changeColor(index)} color={item.color} key={index}/>                 
+            );
+        });
+
+        return (<div className="container">
+                <h1 className="text-center my-3">Components Demo</h1>
+                {boxElements}
+            </div>);
+    }
+}
 
 export default App;
